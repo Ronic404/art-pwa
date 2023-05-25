@@ -1,7 +1,7 @@
-import axios, { AxiosInstance } from "axios"
+import axios, { AxiosInstance } from 'axios'
 import { baseURL, clientID, clientSecret } from './constants'
 
-let token = ''
+const LS_TOKEN = 'X-Xapp-Token'
 
 export const getToken = async () => {
   const response = await axios.post(`${baseURL}tokens/xapp_token`, {
@@ -9,26 +9,40 @@ export const getToken = async () => {
     client_secret: clientSecret,
   })
 
-  token = response.data.token
+  return response
 }
 
-export const api: AxiosInstance = axios.create({
-  baseURL,
-  headers: {
-    'X-Xapp-Token': token,
-  },
-})
+export const api: AxiosInstance = axios.create({ baseURL })
 
-api.interceptors.response.use(undefined, (error) => {
-    const originalRequest = error.config;
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem(LS_TOKEN)
 
-    if (error.response?.status === 400 && !originalRequest?._retry) {
-      originalRequest._retry = true;
-      getToken();
-      originalRequest.headers['X-Xapp-Token'] = token
-      return api(originalRequest)
+    if (token) {
+      config.headers[LS_TOKEN] = token
     }
 
-    return Promise.reject(error);
+    return config
+  },
+  (error) => Promise.reject(error)
+)
+
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config
+
+    if (error.response.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true
+
+      const response = await getToken()
+
+      if (response.status === 201) {
+          localStorage.setItem(LS_TOKEN, response.data.token)
+          return api(originalRequest)
+      }
+    }
+
+    return Promise.reject(error)
   }
-);
+)

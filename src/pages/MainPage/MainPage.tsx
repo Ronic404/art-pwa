@@ -4,7 +4,6 @@ import { useEffect } from "react"
 import { useAppDispatch, useAppSelector } from "../../store/hooks"
 import { artistsDataSelector } from "../../store/artists/artistsSelectors"
 import { getArtists } from "../../store/artists/artistsSlice"
-import { getToken } from "../../api/axios"
 import { Link } from 'react-router-dom'
 
 import classNames from 'classnames/bind'
@@ -18,7 +17,6 @@ export const MainPage = () => {
   const artistsData = useAppSelector(artistsDataSelector)
 
   useEffect(() => {
-    getToken()
     dispatch(getArtists())
   }, [])
 
