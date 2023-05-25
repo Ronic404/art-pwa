@@ -11,7 +11,6 @@ const cx = classNames.bind(styles)
 
 export const LayoutWithControls = () => {
   const location = useLocation();
-  console.log(location)
 
   return (
     <>
