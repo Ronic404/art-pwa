@@ -1,0 +1,26 @@
+.page {
+  height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.rubric {
+  flex-basis: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.artists {
+  background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('../../assets/images/backgrounds/artists.jpg') center center;
+}
+
+.artworks {
+  background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('../../assets/images/backgrounds/artworks.jpg') center center;
+}
+
+.rubric-title {
+  color: #ffffff;
+  font-size: 36px;
+  text-shadow: 0 0 4px #000000;
+}
